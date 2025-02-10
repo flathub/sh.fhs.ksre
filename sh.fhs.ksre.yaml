@@ -35,7 +35,6 @@ modules:
   - name: ksre
     buildsystem: simple
     build-commands:
-      - mkdir -p /app/lib/ffmpeg
       - cp -R game "${FLATPAK_DEST}/game"
       - install -Dm755 launcher.sh "${FLATPAK_DEST}/bin/ksre"
       - install -Dm644 -t "${FLATPAK_DEST}/share/appdata/" "flatpak/${FLATPAK_ID}.appdata.xml"
@@ -48,7 +47,7 @@ modules:
     sources:
       - type: git
         url: https://codeberg.org/fhs/katawa-shoujo-re-engineered.git
-        tag: v2.0.1
+        tag: v2.0.1-1
         x-checker-data:
           type: git
           tag-pattern: ^v([\d.]+)$
