@@ -35,6 +35,7 @@ modules:
   - name: ksre
     buildsystem: simple
     build-commands:
+      - mkdir -p /app/lib/ffmpeg
       - cp -R game "${FLATPAK_DEST}/game"
       - install -Dm755 launcher.sh "${FLATPAK_DEST}/bin/ksre"
       - install -Dm644 -t "${FLATPAK_DEST}/share/appdata/" "flatpak/${FLATPAK_ID}.appdata.xml"
