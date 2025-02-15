@@ -55,4 +55,9 @@ modules:
       - type: script
         dest-filename: launcher.sh
         commands:
-          - /app/share/renpy/renpy.sh /app/game "$@"
+          # we need this for modding support: to combine mods and game directory in the runtime
+          - cp -R /app/game /var/tmp/ksre-cache
+          - cp -Rv ~/.renpy/sh.fhs.ksre/mods/* /var/tmp/ksre-cache
+          - /app/share/renpy/renpy.sh /var/tmp/ksre-cache "$@"
+          # cleanup!
+          - rm -r /var/tmp/ksre-cache
