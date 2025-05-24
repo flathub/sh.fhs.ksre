@@ -48,7 +48,7 @@ modules:
     sources:
       - type: git
         url: https://codeberg.org/fhs/katawa-shoujo-re-engineered.git
-        tag: v2.0.1-1
+        tag: v2.0.2
         x-checker-data:
           type: git
           tag-pattern: ^v([\d.]+)$
