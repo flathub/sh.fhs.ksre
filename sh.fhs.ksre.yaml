@@ -1,13 +1,13 @@
 app-id: sh.fhs.ksre
 runtime: org.freedesktop.Platform
-runtime-version: '24.08'
+runtime-version: '25.08'
 sdk: org.freedesktop.Sdk
 command: ksre
 add-extensions:
   org.freedesktop.Platform.ffmpeg-full:
     directory: lib/ffmpeg
     add-ld-path: .
-    version: '24.08'
+    version: '25.08'
     autodelete: false
 finish-args:
   - --share=ipc
@@ -15,51 +15,32 @@ finish-args:
   - --socket=wayland
   - --device=all
   - --socket=pulseaudio
-  - --persist=.renpy
+  - --filesystem=home/.renpy/sh.fhs.ksre:create
   - --filesystem=xdg-run/discord-ipc-0
 modules:
-  - name: renpy
-    buildsystem: simple
-    build-commands:
-      - mkdir -p "${FLATPAK_DEST}/share/renpy"
-      - cp -r doc launcher module renpy renpy.py renpy.sh sdk-fonts "${FLATPAK_DEST}/share/renpy/"
-      - mkdir "${FLATPAK_DEST}/share/renpy/lib"
-      - cp -r lib/py3-linux-$(arch) lib/python3.9 "${FLATPAK_DEST}/share/renpy/lib"
-      - install -Dm755 renpy.sh "${FLATPAK_DEST}/bin/renpy"
-    sources:
-      - type: archive
-        url: https://www.renpy.org/dl/8.3.4/renpy-8.3.4-sdkarm.tar.bz2 # it actually contains libs for linux-x86_64 too!
-        sha256: 5d0ad273d07dfce1374ffb0f76baf36cb210b7ba64ac77e74dc2b5a236513e51
-        dest-filename: renpy.tar.bz2
-
   - name: ksre
     buildsystem: simple
     build-commands:
-      - mkdir -p /app/lib/ffmpeg
-      - cp -R game "${FLATPAK_DEST}/game"
-      - install -Dm755 launcher.sh "${FLATPAK_DEST}/bin/ksre"
+      - mkdir -p "${FLATPAK_DEST}/ksre"
+      - tar -xjf ksre.tar.bz2 -C "${FLATPAK_DEST}/ksre" --strip-components=1
+      - install -Dm755 -t "${FLATPAK_DEST}/bin/" "flatpak/ksre"
       - install -Dm644 -t "${FLATPAK_DEST}/share/appdata/" "flatpak/${FLATPAK_ID}.appdata.xml"
       - install -Dm644 -t "${FLATPAK_DEST}/share/applications/" "flatpak/${FLATPAK_ID}.desktop"
       - install -Dm644 "flatpak/${FLATPAK_ID}.svg" "${FLATPAK_DEST}/share/icons/hicolor/scalable/apps/${FLATPAK_ID}.svg"
-      - sed -i 's/config.developer = "auto"/config.developer = False/g' /app/game/config.rpy
-      # It's not Steam, we don't need achivements.
-      - sed -i 's/define config.steam_appid = "3068300"/define config.steam_appid
-        = None/g' /app/game/achievement.rpy
-      - /app/share/renpy/renpy.sh /app/game compile
     sources:
+      - type: file
+        url: https://github.com/fleetingheart/ksre/releases/download/v2.0.4/KSRE-linux.tar.bz2
+        sha256: aa2525c22e9cd9dc0beb306f45e9c318e1c8b68012b6c5a4baf824bf71e66d5b
+        dest-filename: ksre.tar.bz2
+        x-checker-data:
+          type: json
+          url: https://api.github.com/repos/fleetingheart/ksre/releases/latest
+          version-query: ".tag_name | sub(\"^v\"; \"\")"
+          url-query: ".assets[] | select(.name == \"KSRE-linux.tar.bz2\") | .browser_download_url"
       - type: git
-        url: https://codeberg.org/fhs/katawa-shoujo-re-engineered.git
-        tag: v2.0.3
+        url: https://codeberg.org/fhs/flatpak.git
+        branch: master
+        dest: flatpak
         x-checker-data:
           type: git
-          tag-pattern: ^v([\d.]+)$
-        commit: 8cff2731c0a985260897b3f3b1ec21171a2f0ddd
-      - type: script
-        dest-filename: launcher.sh
-        commands:
-          # we need this for modding support: to combine mods and game directory in the runtime
-          - cp -R /app/game /var/tmp/ksre-cache
-          - cp -Rv ~/.renpy/sh.fhs.ksre/mods/* /var/tmp/ksre-cache
-          - /app/share/renpy/renpy.sh /var/tmp/ksre-cache "$@"
-          # cleanup!
-          - rm -r /var/tmp/ksre-cache
+          branch: master
