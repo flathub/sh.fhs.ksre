@@ -39,7 +39,7 @@ modules:
           url-query: ".assets[] | select(.name == \"KSRE-linux.tar.bz2\") | .browser_download_url"
       - type: git
         url: https://codeberg.org/fhs/flatpak.git
-        branch: master
+        commit: 19bff4c3b9fd79303fa3516dc0c7e8b637819dbf
         dest: flatpak
         x-checker-data:
           type: git
