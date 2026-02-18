@@ -15,7 +15,8 @@ finish-args:
   - --socket=wayland
   - --device=all
   - --socket=pulseaudio
-  - --filesystem=home/.renpy/sh.fhs.ksre:create
+  - --persist=.renpy/sh.fhs.ksre
+  - --persist=mods
   - --filesystem=xdg-run/discord-ipc-0
 modules:
   - name: ksre
@@ -39,7 +40,7 @@ modules:
           url-query: ".assets[] | select(.name == \"KSRE-linux.tar.bz2\") | .browser_download_url"
       - type: git
         url: https://codeberg.org/fhs/flatpak.git
-        commit: 19bff4c3b9fd79303fa3516dc0c7e8b637819dbf
+        commit: edcb5036649016e467d9c83c4f8b62b069f4d66b
         dest: flatpak
         x-checker-data:
           type: git
