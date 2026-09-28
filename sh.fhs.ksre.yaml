@@ -1,13 +1,13 @@
 app-id: sh.fhs.ksre
 runtime: org.freedesktop.Platform
-runtime-version: '25.08'
+runtime-version: '26.08'
 sdk: org.freedesktop.Sdk
 command: ksre
 add-extensions:
   org.freedesktop.Platform.ffmpeg-full:
     directory: lib/ffmpeg
     add-ld-path: .
-    version: '25.08'
+    version: '26.08'
     autodelete: false
 finish-args:
   - --share=ipc
@@ -30,17 +30,17 @@ modules:
       - install -Dm644 "flatpak/${FLATPAK_ID}.svg" "${FLATPAK_DEST}/share/icons/hicolor/scalable/apps/${FLATPAK_ID}.svg"
     sources:
       - type: file
-        url: https://github.com/fleetingheart/ksre/releases/download/v2.0.4/KSRE-linux.tar.bz2
-        sha256: aa2525c22e9cd9dc0beb306f45e9c318e1c8b68012b6c5a4baf824bf71e66d5b
+        url: https://github.com/fleetingheart/ksre/releases/download/v2.0.5/KSRE-linux.tar.bz2
+        sha256: bc648fe1a3a1c59a8f8b7296480dccfbaf98708b33c4cfd1a18f693232beee84
         dest-filename: ksre.tar.bz2
         x-checker-data:
           type: json
           url: https://api.github.com/repos/fleetingheart/ksre/releases/latest
-          version-query: ".tag_name | sub(\"^v\"; \"\")"
-          url-query: ".assets[] | select(.name == \"KSRE-linux.tar.bz2\") | .browser_download_url"
+          version-query: .tag_name | sub("^v"; "")
+          url-query: .assets[] | select(.name == "KSRE-linux.tar.bz2") | .browser_download_url
       - type: git
         url: https://codeberg.org/fhs/flatpak.git
-        commit: edcb5036649016e467d9c83c4f8b62b069f4d66b
+        commit: 28f38b35bdb9b244161d4aa23a02531aaf98124f
         dest: flatpak
         x-checker-data:
           type: git
