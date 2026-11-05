@@ -43,5 +43,6 @@ modules:
         commit: 28f38b35bdb9b244161d4aa23a02531aaf98124f
         dest: flatpak
         x-checker-data:
-          type: git
-          branch: master
+          type: json
+          url: https://codeberg.org/api/v1/repos/fhs/flatpak/branches/master
+          commit-query: .commit.id
